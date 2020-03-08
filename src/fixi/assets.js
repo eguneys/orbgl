@@ -1,6 +1,11 @@
 import { objMap } from './util2';
 
-export default function Assets(assets) {
+export default function Assets(assets, opts) {
+
+  opts = { assetsUrl: '',
+           ...opts };
+
+  let { assetsUrl } = opts;
 
   const cache = {};
   const total = Object.keys(assets).length;
@@ -19,7 +24,7 @@ export default function Assets(assets) {
           img.onload = () => {
             resolve(img);
           };
-          img.src = source;
+          img.src = assetsUrl + source;
         }).then(image => {
           cache[key] = image;
           progress++;

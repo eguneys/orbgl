@@ -9,9 +9,15 @@ import initRenderer from './renderer';
 
 export function app(element, options) {
 
+  let assetsUrl = 'assets/images/';
+
 
   new Assets({
-    'uvgrid': 'assets/images/ash_uvgrid01.jpg'
+    'clouds': 'moonclouds.png',
+    'mountains': 'mountainstiled.png',
+    'uvgrid': 'ash_uvgrid01.jpg'
+  }, {
+    assetsUrl
   }).start()
     .then(assets => {
 

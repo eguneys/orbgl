@@ -53,7 +53,7 @@ export default function Renderer(canvas) {
        ("aPosition", { size: 3 });
 
        const aTexCoordInfo = new G.makeBufferInfoForAttribute
-       ("aTexCoord", { size: 3 });
+       ("aTexCoord", { size: 2 });
 
 
        const mesh = g.makeDraw({
@@ -76,7 +76,7 @@ export default function Renderer(canvas) {
 
        aPosInfo.set(geometry.vertices, g.gl.STATIC_DRAW);
        aTexCoordInfo.set(geometry.uvs, g.gl.STATIC_DRAW);
-       
+
        return {
          uTextureInfo,
          drawInfo: mesh

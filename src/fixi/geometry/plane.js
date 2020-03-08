@@ -25,7 +25,7 @@ export default function PlaneGeometry(width = 1, height = width, widthSegments =
       let x = ix * segmentWidth;
 
       vertices.push(x, y, 0);
-      uvs.push(ix / gridX, 1 - (iy / gridY));
+      uvs.push(ix / gridX, (iy / gridY));
     }
   }
 

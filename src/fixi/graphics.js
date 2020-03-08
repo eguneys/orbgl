@@ -6,7 +6,7 @@ export default function Graphics(gl) {
   // https://stackoverflow.com/questions/57612782/how-to-render-objects-without-blending-with-transparency-enabled-in-webgl/57613578#57613578
   gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
   gl.enable(gl.BLEND);
-  gl.enable(gl.DEPTH_TEST);
+  // gl.enable(gl.DEPTH_TEST);
 
   this.gl = gl;
 
@@ -84,8 +84,6 @@ export default function Graphics(gl) {
       });
 
       uniforms.forEach(_ => _());
-
-      
 
       // gl.drawArrays(gl.TRIANGLES, 0, numVertices);
 
