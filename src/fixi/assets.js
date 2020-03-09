@@ -1,4 +1,5 @@
 import { objMap } from './util2';
+import { defaultLoaders } from './loaders';
 
 export default function Assets(assets, opts) {
 
@@ -6,6 +7,12 @@ export default function Assets(assets, opts) {
            ...opts };
 
   let { assetsUrl } = opts;
+
+  let loaders = [...defaultLoaders];
+
+  const loaderContext = { 
+    assetsUrl
+  };
 
   const cache = {};
   const total = Object.keys(assets).length;
@@ -19,13 +26,8 @@ export default function Assets(assets, opts) {
   this.start = () => {
     return Promise.all(Object.values(
       objMap(assets, (key, source) => {
-        return new Promise(resolve => {
-          let img = new Image();
-          img.onload = () => {
-            resolve(img);
-          };
-          img.src = assetsUrl + source;
-        }).then(image => {
+        let Loader = matchLoader(source);
+        Loader(source, loaderContext).then(image => {
           cache[key] = image;
           progress++;
         });
@@ -33,4 +35,16 @@ export default function Assets(assets, opts) {
       .then(_ => cache);
   };
 
+  const matchLoader = source => {
+    let [_, extension] = source.split('.');
+
+    let loader = loaders.find(({ test }) => extension.match(test));
+
+    if (!loader) {
+      console.warn(`Couldn't find loader for ${source}, ignoring.`);
+      return () => Promise.resolve();
+    }
+
+    return loader.loader;
+  };
 }

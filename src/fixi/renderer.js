@@ -93,14 +93,16 @@ export default function Renderer(canvas) {
 
   const textureMatrix = (bounds, width, height) => {
 
-    if (!bounds) return mat3.identity();
+    let clamped = mat3.identity();
+
+    if (!bounds) return clamped;
 
     let transform = {
-      translate: [bounds[0], bounds[1]],
+      translate: [bounds[0] / width, bounds[1] / height],
       scale: [bounds[2] / width, bounds[3] / height]
     };
 
-    return mat3.transform(mat3.identity(), transform);
+    return mat3.transform(clamped, transform);
   };
 
   const modelMatrix = transform => {

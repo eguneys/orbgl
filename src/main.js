@@ -34,6 +34,8 @@ export function app(element, options) {
 
       const play = new Play(ctx);
 
+      play.init({});
+
       new Loop(delta => {
         play.update(delta);
         play.render();
