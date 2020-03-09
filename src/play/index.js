@@ -16,7 +16,7 @@ export default function Play(ctx) {
     renderer.drawMesh('quad', {
       texture: assets['clouds']
     }, {
-      translate: [0, 0, 0],
+      translate: [0, 0],
       size: [width, height]
     });
 
@@ -30,6 +30,13 @@ export default function Play(ctx) {
       size: [mountainsW, mountainsH]
     });
 
+    renderer.drawMesh('quad', {
+      texture: assets['magic']
+    }, {
+      translate: [0, 0],
+      size: [64, 64],
+      texture: [0, 0, 64, 64]
+    });
   };
 
   

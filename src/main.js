@@ -15,6 +15,7 @@ export function app(element, options) {
   new Assets({
     'clouds': 'moonclouds.png',
     'mountains': 'mountainstiled.png',
+    'magic': 'magic.png',
     'uvgrid': 'ash_uvgrid01.jpg'
   }, {
     assetsUrl

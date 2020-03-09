@@ -3,7 +3,7 @@ import { objMap, objForeach } from './util2';
 import Graphics from './graphics';
 import * as G from './graphics';
 
-import * as mat4 from './mat4';
+import * as mat3 from './mat3';
 
 import Pool from 'poolf';
 
@@ -50,7 +50,7 @@ export default function Renderer(canvas) {
              new G.makeTextureInfoForUniform("uTexture");
 
        const aPosInfo = new G.makeBufferInfoForAttribute
-       ("aPosition", { size: 3 });
+       ("aPosition", { size: 2 });
 
        const aTexCoordInfo = new G.makeBufferInfoForAttribute
        ("aTexCoord", { size: 2 });
@@ -60,7 +60,8 @@ export default function Renderer(canvas) {
          name,
          program,
          uniforms: {
-           'uMatrix': G.makeUniformM4fvSetter('uMatrix')
+           'uMatrix': G.makeUniformM3fvSetter('uMatrix'),
+           'uTextureMatrix': G.makeUniformM3fvSetter('uTextureMatrix'),
          },
          textureInfos: [
            uTextureInfo
@@ -90,16 +91,28 @@ export default function Renderer(canvas) {
     transforms[name] = modelMatrix(transform);
   };
 
-  const modelMatrix = transform => {
-    let matrix = transforms[transform.transform] || mat4.identity();
+  const textureMatrix = (bounds, width, height) => {
 
-    return mat4.transform(matrix, transform);
+    if (!bounds) return mat3.identity();
+
+    let transform = {
+      translate: [bounds[0], bounds[1]],
+      scale: [bounds[2] / width, bounds[3] / height]
+    };
+
+    return mat3.transform(mat3.identity(), transform);
+  };
+
+  const modelMatrix = transform => {
+    let matrix = transforms[transform.transform] || mat3.identity();
+
+    return mat3.transform(matrix, transform);
   };
 
   const mvpMatrix = modelMatrix => {
-    let projectionMatrix = mat4.projection(width, height, 2);
-    
-    return mat4.multiply(projectionMatrix, modelMatrix);
+    let projectionMatrix = mat3.projection(width, height);
+
+    return mat3.multiply(projectionMatrix, modelMatrix);
 
   };
 
@@ -114,10 +127,7 @@ export default function Renderer(canvas) {
 
   this.drawMesh = (name, uniforms, transform = {}) => {
     
-    const uMatrix = mvpMatrix(modelMatrix(sizeToScale(transform)));
-    
     let drawInfoPool = drawInfos[name];
-    
     
     if (!drawInfoPool) {
       throw new Error("undefined mesh " + name);
@@ -125,14 +135,19 @@ export default function Renderer(canvas) {
 
     let { drawInfo, uTextureInfo } = drawInfoPool.acquire();
 
+    const uMatrix = mvpMatrix(modelMatrix(sizeToScale(transform)));
+
+    const uTextureMatrix = textureMatrix(transform.texture,
+                                         uniforms.texture.width,
+                                         uniforms.texture.height);
+
     uniforms = {
       uMatrix: [uMatrix],
+      uTextureMatrix: [uTextureMatrix],
       ...uniforms
     };
 
-    if (uniforms.texture) {
-      uTextureInfo.set(uniforms.texture);
-    }
+    uTextureInfo.set(uniforms.texture);
 
     g.addDrawInfo(drawInfo, uniforms, drawInfo.numElements);
 
