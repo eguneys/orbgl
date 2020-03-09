@@ -33,7 +33,9 @@ export default function Play(ctx) {
   this.render = () => {
 
     renderer.drawMesh('quad', {
-      texture: assets['clouds']
+      texture: {
+        src: assets['clouds']
+      }
     }, {
       translate: [0, 0],
       size: [width, height]
@@ -43,19 +45,23 @@ export default function Play(ctx) {
         mountainsH = height * 0.7;
 
     renderer.drawMesh('quad', {
-      texture: assets['mountains']
+      texture: {
+        src: assets['mountains'],
+        frame: [tileMountainsX + 0.5, 0.5, 600, 200]
+      }
     }, {
       translate: [0, height - mountainsH],
       size: [mountainsW, mountainsH],
-      texture: [tileMountainsX + 0.5, 0.5, 600, 200]
     });
 
     renderer.drawMesh('quad', {
-      texture: assets['magic']
+      texture: {
+        src: assets['magic'],
+        frame: magicFrames.frame()
+      }
     }, {
       translate: [0, 0],
-      size: [64, 64],
-      texture: magicFrames.frame()
+      size: [64, 64]
     });
   };
 }

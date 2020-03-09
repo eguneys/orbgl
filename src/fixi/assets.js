@@ -27,8 +27,8 @@ export default function Assets(assets, opts) {
     return Promise.all(Object.values(
       objMap(assets, (key, source) => {
         let Loader = matchLoader(source);
-        Loader(source, loaderContext).then(image => {
-          cache[key] = image;
+        return Loader(source, loaderContext).then(asset => {
+          cache[key] = asset;
           progress++;
         });
       })))

@@ -139,9 +139,22 @@ export default function Renderer(canvas) {
 
     const uMatrix = mvpMatrix(modelMatrix(sizeToScale(transform)));
 
-    const uTextureMatrix = textureMatrix(transform.texture,
-                                         uniforms.texture.width,
-                                         uniforms.texture.height);
+    const { texture } = uniforms;
+
+    let uTextureMatrix;
+
+
+    if (texture && texture.src) {
+      uTextureMatrix = textureMatrix(texture.frame,
+                                     texture.src.width,
+                                     texture.src.height);
+
+      uTextureInfo.set(texture.src);
+
+    } else {
+      uTextureMatrix = mat3.identity();
+      console.warn(`Undefined texture for ${drawInfo.name}`);
+    }
 
     uniforms = {
       uMatrix: [uMatrix],
@@ -149,7 +162,6 @@ export default function Renderer(canvas) {
       ...uniforms
     };
 
-    uTextureInfo.set(uniforms.texture);
 
     g.addDrawInfo(drawInfo, uniforms, drawInfo.numElements);
 

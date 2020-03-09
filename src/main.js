@@ -16,12 +16,12 @@ export function app(element, options) {
     'clouds': 'moonclouds.png',
     'mountains': 'mountainstiled.png',
     'magic': 'magic.png',
-    'uvgrid': 'ash_uvgrid01.jpg'
+    'uvgrid': 'ash_uvgrid01.jpg',
+    'magicframes': 'magic.json'
   }, {
     assetsUrl
   }).start()
     .then(assets => {
-
       const canvas = new Canvas(element);
 
       const renderer = initRenderer(canvas);
