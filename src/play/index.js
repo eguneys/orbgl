@@ -14,13 +14,7 @@ export default function Play(ctx) {
     
     tileMountainsX = 0;
 
-    magicFrames = new Animation([
-      [64 * 0, 0, 64, 64],
-      [64 * 1, 0, 64, 64],
-      [64 * 2, 0, 64, 64],
-      [64 * 3, 0, 64, 64],
-      [64 * 4, 0, 64, 64],
-    ]);
+    magicFrames = new Animation(assets['magicFrames']);
 
   };
 

@@ -6,6 +6,7 @@ import Canvas from './fixi/canvas';
 import Play from './play';
 
 import initRenderer from './renderer';
+import atlasFrames from './atlas';
 
 export function app(element, options) {
 
@@ -17,11 +18,14 @@ export function app(element, options) {
     'mountains': 'mountainstiled.png',
     'magic': 'magic.png',
     'uvgrid': 'ash_uvgrid01.jpg',
-    'magicframes': 'magic.json'
+    'magicatlas': 'magic.json'
   }, {
     assetsUrl
   }).start()
     .then(assets => {
+
+      atlasFrames(assets);
+
       const canvas = new Canvas(element);
 
       const renderer = initRenderer(canvas);
