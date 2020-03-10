@@ -1,3 +1,5 @@
+import * as v from './vec2';
+
 export function identity() {
   return [
     1, 0, 0,
@@ -31,6 +33,17 @@ export function scaling(sx, sy) {
   return [
     sx, 0, 0,
     0, sy, 0,
+    0, 0, 1
+  ];
+}
+
+export function rotation(angle) {
+  var c = Math.cos(angle),
+      s = Math.sin(angle);
+
+  return [
+    c, s, 0,
+    -s, c, 0,
     0, 0, 1
   ];
 }
@@ -76,14 +89,41 @@ export function scale(m, sx, sy) {
   return multiply(m, scaling(sx, sy));
 }
 
+export function rotate(m, angle) {
+  return multiply(m, rotation(angle));
+}
+
 export function transform(m, ts) {
+
+  function protectAnchor(size, f) {
+    if (!size) {
+      f();
+      return;
+    }
+
+    let anchor = v.scale(size, 0.5);
+    m = translate(m, anchor[0], anchor[1]);
+    f();
+    m = translate(m, -anchor[0], -anchor[1]);
+  }
+
 
   if (ts.translate) {
     m = translate(m, ts.translate[0], ts.translate[1]);
   }
 
+
+  if (ts.rotate) {
+    protectAnchor(ts.size, () => {
+      m = rotate(m, ts.rotate);
+    });
+  }
+
   if (ts.scale) {
-    m = scale(m, ts.scale[0], ts.scale[1]);
+    protectAnchor(ts.size, () => {
+      m = scale(m, Math.sign(ts.scale[0]), Math.sign(ts.scale[1]));
+    });
+    m = scale(m, Math.abs(ts.scale[0]), Math.abs(ts.scale[1]));
   }
   
   return m;

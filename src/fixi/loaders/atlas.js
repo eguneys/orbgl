@@ -1,4 +1,4 @@
-export default function extractFramesForAnimation(data, match, length) {
+export function extractFramesForAnimation(data, match, length) {
 
   let res = [];
 
@@ -8,6 +8,17 @@ export default function extractFramesForAnimation(data, match, length) {
 
     res.push([frame.x, frame.y, frame.w, frame.h]);
   }
+
+  return res;  
+}
+
+export function makeHorizontalFrames(data, names, tileW, tileH) {
+
+  let res = {};
+
+  names.forEach((name, i) => {
+    res[name] = [i * tileW, 0, tileW, tileH];
+  });
 
   return res;  
 }

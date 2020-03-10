@@ -18,7 +18,11 @@ export function app(element, options) {
     'mountains': 'mountainstiled.png',
     'magic': 'magic.png',
     'uvgrid': 'ash_uvgrid01.jpg',
-    'magicatlas': 'magic.json'
+    'magicatlas': 'magic.json',
+    'smoke': 'smoke.png',
+    'smokeatlas': 'smoke.json',
+    'blob': 'blob.png',
+    'grassatlas': 'grass.png'
   }, {
     assetsUrl
   }).start()

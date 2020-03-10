@@ -4,8 +4,11 @@ import Graphics from './graphics';
 import * as G from './graphics';
 
 import * as mat3 from './mat3';
+import * as v from './vec2';
 
 import Pool from 'poolf';
+
+const { vec2 } = v;
 
 export default function Renderer(canvas) {
 
@@ -120,7 +123,11 @@ export default function Renderer(canvas) {
 
   const sizeToScale = transform => {
     if (transform.size) {
-      transform.scale = [transform.size[0] / 256, 
+      let tScale = transform.scale||[1,1];
+
+      transform.scale = [Math.sign(tScale[0]) * 
+                         transform.size[0] / 256,
+                         Math.sign(tScale[1]) * 
                          transform.size[1] / 256, 
                          1];
     }
@@ -137,12 +144,9 @@ export default function Renderer(canvas) {
 
     let { drawInfo, uTextureInfo } = drawInfoPool.acquire();
 
-    const uMatrix = mvpMatrix(modelMatrix(sizeToScale(transform)));
-
     const { texture } = uniforms;
 
     let uTextureMatrix;
-
 
     if (texture && texture.src) {
       uTextureMatrix = textureMatrix(texture.frame,
@@ -150,11 +154,12 @@ export default function Renderer(canvas) {
                                      texture.src.height);
 
       uTextureInfo.set(texture.src);
-
     } else {
       uTextureMatrix = mat3.identity();
       console.warn(`Undefined texture for ${drawInfo.name}`);
     }
+
+    const uMatrix = mvpMatrix(modelMatrix(sizeToScale(transform)));
 
     uniforms = {
       uMatrix: [uMatrix],
