@@ -2,7 +2,7 @@ import Rect from './rect';
 
 export default function QuadTree(x, y, w, h,
                                  data = null,
-                                 depth = 7,
+                                 depth = 4,
                                  index = 0,
                                  children = null) {
 
@@ -17,6 +17,19 @@ export default function QuadTree(x, y, w, h,
     if (tRect.intersects(rect) || rect.contains(tRect)) {
       this.updateChildren(newData, (newChild, newData) => {
         newChild.updateWithRectangle(tRect, newData);
+      });
+    }
+  };
+
+  this.updateWithCircle = (tCircle, newData) => {
+    if (tCircle.containsRect(rect)) {
+      this.foldChildrenToParent(newData);
+      return;
+    }
+    if (tCircle.intersectsRect(rect) ||
+        rect.containsPoint(tCircle.x, tCircle.y)) {
+      this.updateChildren(newData, (newChild, newData) => {
+        newChild.updateWithCircle(tCircle, newData);
       });
     }
   };
@@ -40,8 +53,8 @@ export default function QuadTree(x, y, w, h,
   };
 
   this.updateChildren = (newData, onUpdateChild) => {
-    if (this.resDepth > 0) {
-      if (this.children === null) {
+    if (depth > 0) {
+      if (children === null) {
         createChildren(newData);
       }
       children.forEach(child => {
@@ -68,7 +81,7 @@ export default function QuadTree(x, y, w, h,
       { w: 0, h: 1 },
       { w: 1, h: 1 }
     ];
-
+    children = [];
     for (let i = 0; i < 4; i++) {
       let o = wh[i];
       let x = rect.x + (rect.width  / 2 * o.w),

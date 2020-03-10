@@ -37,56 +37,57 @@ export default function Renderer(canvas) {
                  program: programName,
                  geometry,
                  material }) => 
-     new Pool(id => {
-       
-       let program = prCache[programName];
-       if (!program) {
-         throw new Error("Undefined program name " + programName);
-       }
+     {
+       const onNewItem = id => {
+         let program = prCache[programName];
+         if (!program) {
+           throw new Error("Undefined program name " + programName);
+         }
 
-       if (!geometry) {
-         console.warn("Undefined geometry for mesh " + name);
-       }
-
-
-       const uTextureInfo = 
-             new G.makeTextureInfoForUniform("uTexture");
-
-       const aPosInfo = new G.makeBufferInfoForAttribute
-       ("aPosition", { size: 2 });
-
-       const aTexCoordInfo = new G.makeBufferInfoForAttribute
-       ("aTexCoord", { size: 2 });
+         if (!geometry) {
+           console.warn("Undefined geometry for mesh " + name);
+         }
 
 
-       const mesh = g.makeDraw({
-         name,
-         program,
-         uniforms: {
-           'uMatrix': G.makeUniformM3fvSetter('uMatrix'),
-           'uTextureMatrix': G.makeUniformM3fvSetter('uTextureMatrix'),
-         },
-         textureInfos: [
-           uTextureInfo
-         ],
-         bufferInfos: [
-           aPosInfo,
-           aTexCoordInfo
-         ],
-         indices: geometry.indices
-       });
+         const uTextureInfo = 
+               new G.makeTextureInfoForUniform("uTexture");
 
-       // uTextureInfo.set(material);
+         const aPosInfo = new G.makeBufferInfoForAttribute
+         ("aPosition", { size: 2 });
 
-       aPosInfo.set(geometry.vertices, g.gl.STATIC_DRAW);
-       aTexCoordInfo.set(geometry.uvs, g.gl.STATIC_DRAW);
+         const aTexCoordInfo = new G.makeBufferInfoForAttribute
+         ("aTexCoord", { size: 2 });
 
-       return {
-         uTextureInfo,
-         drawInfo: mesh
+
+         const mesh = g.makeDraw({
+           name,
+           program,
+           uniforms: {
+             'uMatrix': G.makeUniformM3fvSetter('uMatrix'),
+             'uTextureMatrix': G.makeUniformM3fvSetter('uTextureMatrix'),
+           },
+           textureInfos: [
+             uTextureInfo
+           ],
+           bufferInfos: [
+             aPosInfo,
+             aTexCoordInfo
+           ],
+           indices: geometry.indices
+         });
+
+         // uTextureInfo.set(material);
+
+         aPosInfo.set(geometry.vertices, g.gl.STATIC_DRAW);
+         aTexCoordInfo.set(geometry.uvs, g.gl.STATIC_DRAW);
+
+         return {
+           uTextureInfo,
+           drawInfo: mesh
+         };
        };
-     })
-    );    
+       return new Pool(onNewItem, { warnLeak: 10000 });
+     });
   };
 
 

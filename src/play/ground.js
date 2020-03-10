@@ -1,3 +1,4 @@
+
 export default function Ground(play, ctx) {
 
   const { canvas, renderer, assets } = ctx;
@@ -11,6 +12,13 @@ export default function Ground(play, ctx) {
 
   let tiles;
 
+  const hideState = {
+    hidden: true
+  };
+  const visibleState = {
+    hidden: false
+  };
+
   this.init = (data) => {
     tiles = data.tiles;
   };
@@ -19,10 +27,6 @@ export default function Ground(play, ctx) {
   };
 
   this.render = () => {
-
-    tiles.traverse((data, rect) => {
-      console.log(data, rect);
-    });
 
   };
 

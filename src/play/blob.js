@@ -10,8 +10,8 @@ export default function Blob(play, ctx) {
   const { width, height } = canvas;
 
   let bs = {
-    bHeight: 64,
-    bWidth: 64,
+    bHeight: 32,
+    bWidth: 32,
     width,
     height
   };

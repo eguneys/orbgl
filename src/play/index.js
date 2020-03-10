@@ -1,8 +1,4 @@
-import Background from './bg';
-import Blob from './blob';
-import Ground from './ground';
-
-import genTiles from '../gen';
+import Solid from './solid';
 
 export default function Play(ctx) {
 
@@ -10,30 +6,20 @@ export default function Play(ctx) {
 
   const { width, height } = canvas;
 
-  let bg = new Background(this, ctx);
-  let blob = new Blob(this, ctx);
-  let ground = new Ground(this, ctx);
+  let solid = new Solid(this, ctx);
 
   this.init = (data) => {
-    data.tiles = genTiles(100, 100);
-
-    bg.init({});
-    blob.init({});
-    ground.init({
-      tiles: data.tiles
-    });
+    solid.init({});
   };
 
 
   this.update = delta => {
-    bg.update(delta);
-    blob.update(delta);
-    ground.update(delta);
+    solid.update(delta);
   };
 
   this.render = () => {
-    bg.render();
-    blob.render();
-    ground.render();
+
+    solid.render();    
+
   };
 }
