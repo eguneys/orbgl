@@ -1,44 +1,53 @@
-export default function QuadTree(data = null,
-                                 depth = 0,
+import Rect from './rect';
+
+export default function QuadTree(x, y, w, h,
+                                 data = null,
+                                 depth = 7,
                                  index = 0,
                                  children = null) {
 
-  let maxDepth = 8;
+  
+  let rect = new Rect(x, y, w, h);
 
-
-  this.updateWithCondition = (shallFold, shallUpdate) => newData => {
-    if (shallFold(data)) {
-      foldChildrenToParent(newData);
+  this.updateWithRectangle = (tRect, newData) => {
+    if (tRect.contains(rect)) {
+      this.foldChildrenToParent(newData);
+      return;
     }
-    if (shallUpdate(data)) {
-      updateChildren(newData, (newChild) => {
-        newChild.updateWithCondition(shallFold, shallUpdate, newData);
+    if (tRect.intersects(rect) || rect.contains(tRect)) {
+      this.updateChildren(newData, (newChild, newData) => {
+        newChild.updateWithRectangle(tRect, newData);
       });
     }
   };
-  
-  this.updateWithTree = (updateWithCondition, updateDataFn) => {
+
+  this.traverse = onLeafReached => {
+    if (children !== null) {
+      children.forEach(child => child.traverse(onLeafReached));
+    }
+    else onLeafReached(data, rect, index);
+  };
+
+  this.updateTree = (onLeafReached, updateDataFn) => {
     if (children === null) {
-      let newData = updateDataFn(data, index);
-      if (newData) {
-        updateWithCondition(newData);
-      }
+      let newData = updateDataFn(data);
+      onLeafReached(this, newData);
     } else {
       children.forEach(child => {
-        child.update(updateDataFn);
+        child.updateTree(onLeafReached, updateDataFn);
       });
     }
   };
 
-  const updateChildren = (newData, onUpdateChild) => {
-    if (this.resDepth < maxDepth) {
+  this.updateChildren = (newData, onUpdateChild) => {
+    if (this.resDepth > 0) {
       if (this.children === null) {
         createChildren(newData);
       }
       children.forEach(child => {
         onUpdateChild(child, newData);
       });
-
+      
       clearRedundantChildren();
     } else foldChildrenToParent(newData);
   };
@@ -47,14 +56,28 @@ export default function QuadTree(data = null,
     
   };
 
-  const foldChildrenToParent = (_data) => {
+  const foldChildrenToParent = this.foldChildrenToParent = (_data) => {
     children = null;
     data = _data;
   };
 
   const createChildren = (newData) => {
+    let wh = [
+      { w: 0, h: 0 },
+      { w: 1, h: 0 },
+      { w: 0, h: 1 },
+      { w: 1, h: 1 }
+    ];
+
     for (let i = 0; i < 4; i++) {
-      let newChild = new QuadTree(data, depth + 1, i);
+      let o = wh[i];
+      let x = rect.x + (rect.width  / 2 * o.w),
+          y = rect.y + (rect.height / 2 * o.h),
+          w = rect.width / 2,
+          h = rect.height / 2;
+
+      let newChild = new QuadTree(x,y,w,h,
+                                  data, depth - 1, i);
       children.push(newChild);
     }
   };

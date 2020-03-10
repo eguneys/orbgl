@@ -15,7 +15,7 @@ export default function Play(ctx) {
   let ground = new Ground(this, ctx);
 
   this.init = (data) => {
-    data.tiles = genTiles();
+    data.tiles = genTiles(100, 100);
 
     bg.init({});
     blob.init({});

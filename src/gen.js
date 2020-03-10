@@ -1,5 +1,8 @@
+import Destructible from './destructible';
+
 export default function genTiles(w, h) {
 
-  let tiles = new QuadTree(0, 0, w, h, 0, null);
+  let tiles = new Destructible(0, 0, w, h, null);
 
+  return tiles;
 }

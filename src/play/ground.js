@@ -9,21 +9,21 @@ export default function Ground(play, ctx) {
     gHeight: 32
   };
 
-  this.init = () => {
-    
+  let tiles;
+
+  this.init = (data) => {
+    tiles = data.tiles;
   };
 
   this.update = delta => {
   };
 
   this.render = () => {
-    let gw = bs.gWidth;
-    drawLeftCorner([0, 0]);
-    drawTop([gw, 0]);
-    drawRightCorner([gw * 2, 0]);
-    drawLeftSide([0, gw]);
-    drawMiddle([gw, gw]);
-    drawRightSide([gw * 2, gw]);
+
+    tiles.traverse((data, rect) => {
+      console.log(data, rect);
+    });
+
   };
 
 
