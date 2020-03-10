@@ -14,9 +14,19 @@ export function makeAttribute(v) {
   };
 }
 
-export function add(v0, v1) {
+export function isZero(v0) {
+  return v0[0] === 0 && v0[1] === 0;
+}
+
+export function add(v0, v1, ...vs) {
   v0[0] += v1[0];
   v0[1] += v1[1];
+
+  vs.forEach(v => {
+    v0[0] += v[0];
+    v0[1] += v[1];
+  });
+
   return v0;
 }
 
