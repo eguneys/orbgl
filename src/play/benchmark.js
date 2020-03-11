@@ -65,18 +65,20 @@ function Bunny(play, ctx) {
         collideTop = pos => pos[1] < 0,
         collideBottom = pos => pos[1] > height;
 
+  const randomBoost = () => Math.random()<0.4?-0.2:0;
+
   const resolveCollision = (oldPos, oldVel, dNewPos, dNewVel) => {
 
     let newVel = v.copy(dNewVel);
     let newPos = dNewPos;
 
     if (collideLeft(dNewPos) || collideRight(dNewPos)) {
-      v.mul(newVel, [-1, 1]);
+      v.mul(newVel, [-1, 1.0]);
       newPos = oldPos;
     }
 
     if (collideTop(dNewPos) || collideBottom(dNewPos)) {
-      v.mul(newVel, [1, -1]);
+      v.mul(newVel, [1.0, -0.9 + randomBoost()]);
       newPos = oldPos;
     }
 

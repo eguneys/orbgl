@@ -8,6 +8,8 @@ import Play from './play';
 import initRenderer from './renderer';
 import atlasFrames from './atlas';
 
+import Stats from 'stats.js';
+
 export function app(element, options) {
 
   let assetsUrl = 'assets/images/';
@@ -44,10 +46,15 @@ export function app(element, options) {
 
       play.init({});
 
+      let stats = new Stats();
+      element.appendChild(stats.dom);
+
       new Loop(delta => {
         play.update(delta);
         play.render();
+        stats.begin();
         renderer.render();
+        stats.end();
       }).start();
       
 
