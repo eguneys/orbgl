@@ -49,6 +49,7 @@ export function app(element, options) {
       let stats = new Stats();
       element.appendChild(stats.dom);
 
+
       new Loop(delta => {
         play.update(delta);
         play.render();

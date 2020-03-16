@@ -76,8 +76,6 @@ export default function Renderer(canvas) {
            indices: geometry.indices
          });
 
-         // uTextureInfo.set(material);
-
          aPosInfo.set(geometry.vertices, g.gl.STATIC_DRAW);
          aTexCoordInfo.set(geometry.uvs, g.gl.STATIC_DRAW);
 

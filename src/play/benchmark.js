@@ -13,7 +13,7 @@ export default function Benchmark(play, ctx) {
   let bunnies = new Pool(() => new Bunny(play, ctx));
 
   const allocateBatch = () => {
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 40; i++) {
       let vel = [i*10, 0];
       bunnies.acquire(_ => _.init({
         vel
