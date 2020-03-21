@@ -63,8 +63,7 @@ export default function Renderer(canvas) {
            name,
            program,
            uniforms: {
-             'uMatrix': G.makeUniformM3fvSetter('uMatrix'),
-             'uTextureMatrix': G.makeUniformM3fvSetter('uTextureMatrix'),
+             'uMatrix': G.makeUniformM3fvSetter('uMatrix')
            },
            textureInfos: [
              uTextureInfo
@@ -79,10 +78,11 @@ export default function Renderer(canvas) {
          // uTextureInfo.set(material);
 
          aPosInfo.set(geometry.vertices, g.gl.STATIC_DRAW);
-         aTexCoordInfo.set(geometry.uvs, g.gl.STATIC_DRAW);
+         // aTexCoordInfo.set(geometry.uvs, g.gl.STATIC_DRAW);
 
          return {
            uTextureInfo,
+           aTexCoordInfo,
            drawInfo: mesh
          };
        };
@@ -93,20 +93,6 @@ export default function Renderer(canvas) {
 
   this.makeTransform = (name, transform) => {
     transforms[name] = modelMatrix(transform);
-  };
-
-  const textureMatrix = (bounds, width, height) => {
-
-    let clamped = mat3.identity();
-
-    if (!bounds) return clamped;
-
-    let transform = {
-      translate: [bounds[0] / width, bounds[1] / height],
-      scale: [bounds[2] / width, bounds[3] / height]
-    };
-
-    return mat3.transform(clamped, transform);
   };
 
   const modelMatrix = transform => {
@@ -120,6 +106,32 @@ export default function Renderer(canvas) {
 
     return mat3.multiply(projectionMatrix, modelMatrix);
 
+  };
+
+  const uvs = (src, frame) => {
+    const tw = src.width,
+          th = src.height;
+
+    const getTexelCoords = (x, y) => {
+      return [(x + 0.5) / tw, (y + 0.5) / th];
+    };
+
+    let frameLeft = frame[0],
+        frameRight = frame[0] + frame[2] - 1,
+        frameTop = frame[1],
+        frameBottom = frame[1] + frame[3] - 1;
+    
+    let p0 = getTexelCoords(frameLeft, frameTop),
+        p1 = getTexelCoords(frameRight, frameTop),
+        p2 = getTexelCoords(frameRight, frameBottom),
+        p3 = getTexelCoords(frameLeft, frameBottom);
+
+    return [
+      p0[0], p0[1],
+      p1[0], p1[1],
+      p3[0], p3[1],
+      p2[0], p2[1]
+    ];    
   };
 
   const sizeToScale = transform => {
@@ -143,20 +155,15 @@ export default function Renderer(canvas) {
       throw new Error("undefined mesh " + name);
     }
 
-    let { drawInfo, uTextureInfo } = drawInfoPool.acquire();
+    let { drawInfo, uTextureInfo, aTexCoordInfo } = drawInfoPool.acquire();
 
     const { texture } = uniforms;
 
-    let uTextureMatrix;
-
     if (texture && texture.src) {
-      uTextureMatrix = textureMatrix(texture.frame,
-                                     texture.src.width,
-                                     texture.src.height);
-
       uTextureInfo.set(texture.src);
+
+      aTexCoordInfo.set(uvs(texture.src, texture.frame), g.gl.STATIC_DRAW);
     } else {
-      uTextureMatrix = mat3.identity();
       console.warn(`Undefined texture for ${drawInfo.name}`);
     }
 
@@ -164,7 +171,6 @@ export default function Renderer(canvas) {
 
     uniforms = {
       uMatrix: [uMatrix],
-      uTextureMatrix: [uTextureMatrix],
       ...uniforms
     };
 

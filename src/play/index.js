@@ -1,5 +1,4 @@
-import Benchmark from './benchmark';
-import Solid from './solid';
+import Board from './board';
 
 export default function Play(ctx) {
 
@@ -7,24 +6,20 @@ export default function Play(ctx) {
 
   const { width, height } = canvas;
 
-  let benchmark = new Benchmark(this, ctx);
-  let solid = new Solid(this, ctx);
+  let board = new Board(this, ctx);
 
   this.init = (data) => {
-    benchmark.init({});
-    solid.init({});
+
+    board.init(data);
+
   };
 
 
   this.update = delta => {
-    benchmark.update(delta);
-    solid.update(delta);
+    board.update(delta);
   };
 
   this.render = () => {
-
-    benchmark.render();
-    // solid.render();    
-
+    board.render();
   };
 }

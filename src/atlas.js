@@ -2,15 +2,12 @@ import * as aH  from './fixi/loaders/atlas';
 
 export default function atlasFrames(assets) {
 
-  assets['magicFrames'] = aH.extractFramesForAnimation(
-    assets['magicatlas'],
-    `magic %.aseprite`, 6);
+  assets['tileFrames'] = {
+    'black': [0, 0, 32, 32],
+    'white': [0, 32 * 1, 32, 32],
+    'black2': [0, 32 * 2, 32, 32],
+    'white2': [0, 32 * 3, 32, 32]
+  };
 
-  assets['smokeFrames'] = aH.extractFramesForAnimation(
-    assets['smokeatlas'],
-    `smoke %.aseprite`, 12);
-
-  assets['grassFrames'] = aH.makeHorizontalFrames(
-    assets['grassatlas'],
-    ['middle', 'top', 'left', 'leftCorner'], 64, 64);
+  assets['borderFrames'] = aH.extractNineSlice(0, 0, 32);
 }

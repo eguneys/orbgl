@@ -16,15 +16,8 @@ export function app(element, options) {
 
 
   new Assets({
-    'clouds': 'moonclouds.png',
-    'mountains': 'mountainstiled.png',
-    'magic': 'magic.png',
-    'uvgrid': 'ash_uvgrid01.jpg',
-    'magicatlas': 'magic.json',
-    'smoke': 'smoke.png',
-    'smokeatlas': 'smoke.json',
-    'blob': 'blob.png',
-    'grassatlas': 'grass.png'
+    'tiles': 'tile.png',
+    'border': 'border.png'
   }, {
     assetsUrl
   }).start()

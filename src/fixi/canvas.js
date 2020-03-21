@@ -16,4 +16,10 @@ export default function canvas(element) {
   this.canvas = canvas;
   this.gl = gl;
 
+  this.responsiveBounds = (fn) => {
+    return () => {
+      return fn(this);
+    };
+  };
+
 }

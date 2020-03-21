@@ -18,9 +18,9 @@ const rawShaders = {
   'ftexture': fTextureShader
 };
 
-
 const shaderMap = objMap(rawShaders,
                          (_, v) => process(v));
+
 
 const shaderPair = (vSource, fSource) => ({
   vSource: shaderMap[vSource],
