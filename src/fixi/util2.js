@@ -5,9 +5,12 @@ export function objForeach(obj, f) {
 }
 
 export function objMap(obj, f) {
-  return Object.keys(obj).reduce((acc, _) => ({
-    [_]: f(_, obj[_]),
-    ...acc }), {});
+  let res = {};
+
+  Object.keys(obj).forEach(key => {
+    res[key] = f(key, obj[key]);
+  });
+  return res;
 };
 
 export function objFilter(obj, filter) {

@@ -41,6 +41,8 @@ export default function PlaneGeometry(width = 1, height = width, widthSegments =
     }
   }
 
+  console.log(indices);
+
   return { vertices,
            uvs,
            indices };
